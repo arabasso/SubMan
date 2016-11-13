@@ -1,52 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/list_view_item_padding">
+
+    <TextView
+        android:id="@+id/list_materias_letra_text_view"
+        android:layout_height="64dp"
+        android:layout_gravity="fill"
+        android:text="C"
+        android:textAppearance="@android:style/TextAppearance.Inverse"
+        android:gravity="center"
+        android:layout_marginRight="@dimen/list_view_item_padding"
+        android:layout_width="64dp" />
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/list_view_item_padding">
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_height="64dp"
-            android:layout_weight="1"
-            android:layout_width="128dp"
-            android:id="@+id/list_materias_circulo_shape">
-
-            <TextView
-                android:id="@+id/list_materias_letra_text_view"
-                android:layout_weight="1"
-                android:textAppearance="@android:style/TextAppearance.Inverse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_centerInParent="true" />
-
-        </RelativeLayout>
+        <TextView
+            android:id="@+id/list_materias_nome_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Matéria"
+            android:textAppearance="@android:style/TextAppearance.Large" />
 
         <LinearLayout
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:paddingLeft="@dimen/list_view_item_padding">
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/list_materias_professor_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Professor" />
+
+                <TextView
+                    android:text="0, 0, 0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/list_materias_notas_text_view" />
+            </LinearLayout>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/list_materias_nome_text_view"
-                android:textAppearance="@android:style/TextAppearance.Holo.Large"
-                android:layout_weight="1" />
+                android:text="0"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/list_materias_media_text_view"
+                android:gravity="fill"
+                android:textAppearance="@android:style/TextAppearance.Large" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/list_materias_professor_text_view"
-                android:layout_weight="1" />
         </LinearLayout>
 
     </LinearLayout>
-
 </LinearLayout>

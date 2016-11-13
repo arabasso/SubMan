@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -14,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -135,29 +135,33 @@ public class MateriasFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = getActivity().getLayoutInflater().inflate(R.layout.list_materias, parent,false);
 
-            TextView letraTextView = (TextView)convertView.findViewById(R.id.list_materias_letra_text_view);
             TextView nomeTextView = (TextView)convertView.findViewById(R.id.list_materias_nome_text_view);
             TextView professorTextView = (TextView)convertView.findViewById(R.id.list_materias_professor_text_view);
+            TextView letraTextView = (TextView) convertView.findViewById(R.id.list_materias_letra_text_view);
+            TextView notasTextView = (TextView) convertView.findViewById(R.id.list_materias_notas_text_view);
+            TextView mediaTextView = (TextView) convertView.findViewById(R.id.list_materias_media_text_view);
 
-            RelativeLayout circuloShape = (RelativeLayout) convertView.findViewById(R.id.list_materias_circulo_shape);
+            Materia m = (Materia)getItem(position);
 
+            letraTextView.setBackground(getShapeDrawable(m));
+            letraTextView.setText(Character.toString(m.getNome().charAt(0)));
+            nomeTextView.setText(m.getNome());
+            professorTextView.setText(m.getProfessor());
+            notasTextView.setText("0, 0");
+            mediaTextView.setText("0");
+
+            return convertView;
+        }
+
+        @NonNull
+        private ShapeDrawable getShapeDrawable(Materia m) {
+            int indice = m.getId() % 10;
 
             ShapeDrawable background = new ShapeDrawable();
             background.setShape(new OvalShape());
 
-            Materia m = (Materia)getItem(position);
-
-            int indice = m.getId() % 10;
-
             background.getPaint().setColor(ContextCompat.getColor(getActivity(), R.color.circulo_0 + indice));
-
-            circuloShape.setBackground(background);
-
-            letraTextView.setText(Character.toString(m.getNome().charAt(0)));
-            nomeTextView.setText(m.getNome());
-            professorTextView.setText(m.getProfessor());
-
-            return convertView;
+            return background;
         }
     }
 }
