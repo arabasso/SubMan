@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">SubMan</string>
+
+    <!-- menu_main.xml -->
+    <string name="menu_main_sobre">Sobre</string>
+
+    <!-- activity_materias.xml -->
+    <string name="activity_materias_materia_text">Matéria</string>
+    <string name="activity_materias_materia_hint">Nome</string>
+    <string name="activity_materias_professor_text">Professor</string>
+    <string name="activity_materias_professor_hint">Nome</string>
+
+    <!-- menu_materias.xml -->
+    <string name="menu_materias_materia_salvar_text">Salvar</string>
+    <string name="menu_materias_materia_excluir_text">Excluir</string>
+</resources>

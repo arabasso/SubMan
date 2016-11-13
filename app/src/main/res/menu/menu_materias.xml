@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item app:showAsAction="always"
+        android:id="@+id/menu_materias_excluir"
+        android:orderInCategory="101"
+        android:icon="@drawable/ic_delete_white_24dp"
+        android:title="@string/menu_materias_materia_excluir_text"/>
+    <item
+        android:id="@+id/menu_materias_salvar"
+        android:orderInCategory="102"
+        android:icon="@drawable/ic_check_white_24dp"
+        android:visible="true"
+        app:showAsAction="always"
+        android:title="@string/menu_materias_materia_salvar_text" />
+</menu>

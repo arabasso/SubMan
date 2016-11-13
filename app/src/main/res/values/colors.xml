@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <!-- circulos -->
+    <color name="circulo_0">#4066ff</color>
+    <color name="circulo_1">#c55087</color>
+    <color name="circulo_2">#348340</color>
+    <color name="circulo_3">#62342b</color>
+    <color name="circulo_4">#8640ff</color>
+    <color name="circulo_5">#ffbc40</color>
+    <color name="circulo_6">#6a1157</color>
+    <color name="circulo_7">#f16b69</color>
+    <color name="circulo_8">#202367</color>
+    <color name="circulo_9">#676767</color>
+</resources>
