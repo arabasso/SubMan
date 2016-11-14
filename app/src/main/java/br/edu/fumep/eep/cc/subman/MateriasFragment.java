@@ -34,10 +34,6 @@ public class MateriasFragment extends Fragment {
     private ListView listView;
     private MateriaAdapter adapter;
 
-    public MateriaAdapter getAdapter() {
-        return adapter;
-    }
-
     public static MateriasFragment newInstance() {
         MateriasFragment fragment = new MateriasFragment();
 

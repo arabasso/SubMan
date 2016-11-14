@@ -1,6 +1,8 @@
 package br.edu.fumep.eep.cc.subman;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,9 +15,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.List;
+import org.joda.time.DateTime;
 
 import br.edu.fumep.eep.cc.subman.data.Avaliacao;
 import br.edu.fumep.eep.cc.subman.data.Materia;
@@ -55,7 +55,7 @@ public class MateriasActivity extends AppCompatActivity {
 
         if (materia != null) {
             this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        } else{
+        } else {
             materia = new Materia();
         }
 
@@ -69,25 +69,80 @@ public class MateriasActivity extends AppCompatActivity {
 
         listView = (ListView) findViewById(R.id.activity_avaliacoes_list_view);
 
-        adapter = new AvaliacaoAdapter();
+        adapter = new AvaliacaoAdapter(materia);
 
         listView.setAdapter(adapter);
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Avaliacao avaliacao = materia.getAvaliacoes().get(position);
 
-                return true;
+                Intent intent = new Intent(view.getContext(), AvaliacoesActivity.class);
+
+                intent.putExtra("position", position);
+                intent.putExtra("id", avaliacao.getId());
+                intent.putExtra("tipo", avaliacao.getTipo());
+                intent.putExtra("descricao", avaliacao.getDescricao());
+                intent.putExtra("data", avaliacao.getData());
+                intent.putExtra("peso", avaliacao.getPesoFormatado());
+                intent.putExtra("nota", avaliacao.getNotaFormatada());
+
+                startActivityForResult(intent, 0);
             }
         });
 
-        adapter.setList(new ArrayList<>(materia.getAvaliacoes()));
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.activity_materias_adicionar_avaliacoes_button);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), AvaliacoesActivity.class);
+
+                intent.putExtra("id", 0);
+                intent.putExtra("position", -1);
+
+                startActivityForResult(intent, 0);
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (resultCode) {
+            case 1: {
+                int position = data.getIntExtra("position", 0);
+
+                Avaliacao avaliacao = materia.getAvaliacao(position);
+
+                avaliacao.setTipo(data.getIntExtra("tipo", 0));
+                avaliacao.setDescricao(data.getStringExtra("descricao"));
+                avaliacao.setData((DateTime) data.getSerializableExtra("data"));
+                avaliacao.setNotaFormatada(data.getStringExtra("nota"));
+                avaliacao.setPesoFormatado(data.getStringExtra("peso"));
+
+                adapter.notifyDataSetChanged();
+
+                break;
+            }
+
+            case 2: {
+                int position = data.getIntExtra("position", -1);
+
+                if (position >= 0){
+                    materia.getAvaliacoes().remove(position);
+
+                    adapter.notifyDataSetChanged();
+                }
+
+                break;
+            }
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_materias, menu);
 
-        if (materia.getId() <= 0){
+        if (materia.getId() <= 0) {
             menu.findItem(R.id.menu_materias_excluir).setVisible(false);
         }
 
@@ -96,7 +151,7 @@ public class MateriasActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 break;
@@ -129,44 +184,54 @@ public class MateriasActivity extends AppCompatActivity {
     }
 
     public class AvaliacaoAdapter extends BaseAdapter {
-        private List<Avaliacao> list = new ArrayList<>();
+        Materia materia;
 
-        public void setList(List<Avaliacao> list) {
-            this.list.clear();
-            this.list.addAll(list);
-
-            notifyDataSetChanged();
+        public AvaliacaoAdapter(Materia materia) {
+            this.materia = materia;
         }
 
         @Override
         public int getCount() {
-            return list.size();
+            return materia.getAvaliacoes().size();
         }
 
         @Override
         public Object getItem(int position) {
-            return list.get(position);
+            return materia.getAvaliacoes().get(position);
         }
 
         @Override
         public long getItemId(int position) {
-            return list.get(position).getId();
+            return materia.getAvaliacoes().get(position).getId();
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = getLayoutInflater().inflate(R.layout.list_avaliacoes, parent, false);
 
-            TextView tipoTextView = (TextView)convertView.findViewById(R.id.list_avaliacoes_tipo_text_view);
-            TextView dataTextView = (TextView)convertView.findViewById(R.id.list_avaliacoes_data_text_view);
+            TextView tipoTextView = (TextView) convertView.findViewById(R.id.list_avaliacoes_tipo_text_view);
+            TextView descricaoTextView = (TextView) convertView.findViewById(R.id.list_avaliacoes_descricao_text_view);
+            TextView dataTextView = (TextView) convertView.findViewById(R.id.list_avaliacoes_data_text_view);
+            TextView pesoTextView = (TextView) convertView.findViewById(R.id.list_avaliacoes_peso_text_view);
+            TextView notaTextView = (TextView) convertView.findViewById(R.id.list_avaliacoes_nota_text_view);
 
-            Avaliacao avaliacao = (Avaliacao)getItem(position);
+            Avaliacao avaliacao = (Avaliacao) getItem(position);
 
-            tipoTextView.setText(avaliacao.getTipo() + "");
+            tipoTextView.setText(Integer.toString(avaliacao.getTipo()));
+            descricaoTextView.setText(avaliacao.getDescricao());
+            dataTextView.setText(avaliacao.getDataFormatada());
 
-            DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
+            if (avaliacao.getPeso() != null){
+                pesoTextView.setText(Float.toString(avaliacao.getPeso()));
+            } else {
+                pesoTextView.setVisibility(View.INVISIBLE);
+            }
 
-            dataTextView.setText(dateFormat.format(avaliacao.getData()));
+            if (avaliacao.getNota() != null){
+                notaTextView.setText(Float.toString(avaliacao.getNota()));
+            } else{
+                notaTextView.setVisibility(View.INVISIBLE);
+            }
 
             return convertView;
         }

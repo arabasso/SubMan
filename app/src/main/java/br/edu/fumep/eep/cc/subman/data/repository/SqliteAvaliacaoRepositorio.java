@@ -6,13 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import br.edu.fumep.eep.cc.subman.data.Avaliacao;
-import br.edu.fumep.eep.cc.subman.data.DbHelper;
 import br.edu.fumep.eep.cc.subman.data.Materia;
 
 /**
@@ -20,15 +17,14 @@ import br.edu.fumep.eep.cc.subman.data.Materia;
  *
  */
 
-public class SqliteAvaliacaoRepositorio implements Repositorio<Avaliacao> {
-    public static final String TABELA_AVALIACAO = "avaliacao";
-    private DbHelper dbHelper;
+public class SqliteAvaliacaoRepositorio implements AvaliacaoRepositorio {
+    private SqliteDbHelper dbHelper;
     private String[] campos = new String[]{
-            "id", "tipo", "data", "peso", "nota", "materia_id"
+            "id", "descricao", "tipo", "data", "peso", "nota", "materia_id"
     };
 
     public SqliteAvaliacaoRepositorio(Context context) {
-        this.dbHelper = new DbHelper(context);
+        this.dbHelper = new SqliteDbHelper(context);
     }
 
     @Override
@@ -39,7 +35,7 @@ public class SqliteAvaliacaoRepositorio implements Repositorio<Avaliacao> {
                 Integer.toString(id)
         };
 
-        Cursor cursor = db.query(TABELA_AVALIACAO, campos,"id=?",p,null,null,null);
+        Cursor cursor = db.query(SqliteDbHelper.TABELA_AVALIACAO, campos,"id=?",p,null,null,null);
 
         Avaliacao avaliacao = null;
 
@@ -52,44 +48,59 @@ public class SqliteAvaliacaoRepositorio implements Repositorio<Avaliacao> {
         return avaliacao;
     }
 
-    public void salvar(Avaliacao av){
+    public void salvar(Avaliacao avaliacao){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues valores = new ContentValues();
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        valores.put("descricao", avaliacao.getDescricao());
+        valores.put("tipo", avaliacao.getTipo());
+        valores.put("data", avaliacao.getDataFormatada());
+        valores.put("peso", avaliacao.getPeso());
+        valores.put("nota", avaliacao.getNota());
+        valores.put("materia_id", avaliacao.getMateria().getId());
 
-        valores.put("tipo",av.getTipo());
-        valores.put("data",dateFormat.format(av.getData()));
-        valores.put("peso",av.getPeso());
-        valores.put("nota",av.getNota());
+        if (avaliacao.getId() <= 0){
+            int id = (int)db.insert(SqliteDbHelper.TABELA_AVALIACAO, null, valores);
 
-        if (av.getId() <= 0){
-            db.insert(TABELA_AVALIACAO, null, valores);
+            avaliacao.setId(id);
         } else{
             String [] p = new String[]{
-                    Integer.toString(av.getId())
+                    Integer.toString(avaliacao.getId())
             };
 
-            db.update(TABELA_AVALIACAO,valores,"id=?",p);
+            db.update(SqliteDbHelper.TABELA_AVALIACAO, valores, "id = ?", p);
         }
 
         db.close();
     }
 
     public List<Avaliacao> listar() {
+        return getAvaliacoes(null, null);
+    }
 
+    @Override
+    public List<Avaliacao> listarPelaMateria(Materia materia) {
+        String [] p = new String[]{
+                Integer.toString(materia.getId())
+        };
+
+        return getAvaliacoes("materia_id = ?", p);
+    }
+
+    @NonNull
+    private List<Avaliacao> getAvaliacoes(String where, String [] p) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        Cursor cursor = db.query(TABELA_AVALIACAO, campos, null, null, null, null, null);
+        Cursor cursor = db.query(SqliteDbHelper.TABELA_AVALIACAO, campos, where, p, null, null, "data ASC");
 
         List<Avaliacao> av = new ArrayList<>();
 
         if (cursor.moveToFirst()){
             do{
-                Avaliacao a = getAvaliacao(cursor);
+                Avaliacao avaliacao = getAvaliacao(cursor);
 
-                av.add(a);
+                av.add(avaliacao);
             } while(cursor.moveToNext());
         }
 
@@ -101,19 +112,14 @@ public class SqliteAvaliacaoRepositorio implements Repositorio<Avaliacao> {
     @NonNull
     private Avaliacao getAvaliacao(Cursor cursor) {
 
-        Avaliacao a = new Avaliacao(new Materia(cursor.getInt(5)));
+        Avaliacao a = new Avaliacao(new Materia(cursor.getInt(6)));
 
         a.setId(cursor.getInt(0));
-        a.setTipo(cursor.getInt(1));
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-            a.setData(dateFormat.parse(cursor.getString(2)));
-        }catch(Exception e){
-            a.setData(new Date(Long.MIN_VALUE));
-        }
-        a.setPeso(cursor.getFloat(3));
-        a.setNota(cursor.getFloat(4));
+        a.setDescricao(cursor.getString(1));
+        a.setTipo(cursor.getInt(2));
+        a.setDataFormatada(cursor.getString(3));
+        a.setPesoFormatado(cursor.getString(4));
+        a.setNotaFormatada(cursor.getString(5));
 
         return a;
     }
@@ -125,7 +131,7 @@ public class SqliteAvaliacaoRepositorio implements Repositorio<Avaliacao> {
                 Integer.toString(avaliacao.getId())
         };
 
-        db.delete(TABELA_AVALIACAO,"id=?",id);
+        db.delete(SqliteDbHelper.TABELA_AVALIACAO, "id = ?", id);
 
         db.close();
     }

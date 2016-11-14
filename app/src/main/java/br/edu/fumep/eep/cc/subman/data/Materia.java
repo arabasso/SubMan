@@ -1,8 +1,9 @@
 package br.edu.fumep.eep.cc.subman.data;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import org.joda.time.DateTime;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by arabasso on 09/11/2016.
@@ -13,7 +14,7 @@ public class Materia implements Entidade {
     private int id;
     private String nome;
     private String professor;
-    private Set<Avaliacao> avaliacoes = new HashSet<>();
+    private List<Avaliacao> avaliacoes = new ArrayList<>();
 
     public Materia(){
     }
@@ -56,22 +57,41 @@ public class Materia implements Entidade {
         this.professor = professor;
     }
 
-    public Set<Avaliacao> getAvaliacoes() {
+    public List<Avaliacao> getAvaliacoes() {
         return avaliacoes;
     }
 
-    public void setAvaliacoes(Set<Avaliacao> avaliacoes) {
+    public void setAvaliacoes(List<Avaliacao> avaliacoes) {
         this.avaliacoes = avaliacoes;
     }
 
-    public void addAvaliacao(int tipo, Date data, float peso, Float nota){
+    public Avaliacao addAvaliacao(){
         Avaliacao avaliacao = new Avaliacao(this);
 
+        getAvaliacoes().add(avaliacao);
+
+        return avaliacao;
+    }
+
+    public Avaliacao addAvaliacao(int tipo, String descricao, DateTime data, Float peso, Float nota){
+        Avaliacao avaliacao = new Avaliacao(this);
+
+        avaliacao.setDescricao(descricao);
         avaliacao.setTipo(tipo);
         avaliacao.setData(data);
         avaliacao.setPeso(peso);
         avaliacao.setNota(nota);
 
-        this.avaliacoes.add(avaliacao);
+        getAvaliacoes().add(avaliacao);
+
+        return avaliacao;
+    }
+
+    public Avaliacao getAvaliacao(int position) {
+        if (position >= 0) {
+            return getAvaliacoes().get(position);
+        }
+
+        return addAvaliacao();
     }
 }

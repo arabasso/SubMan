@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".MateriasActivity"></activity>
+        <activity android:name=".AvaliacoesActivity"></activity>
     </application>
 
 </manifest>

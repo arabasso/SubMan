@@ -10,7 +10,34 @@
     <string name="activity_materias_professor_text">Professor</string>
     <string name="activity_materias_professor_hint">Nome</string>
 
+    <!-- menu_main.xml -->
+    <string name="menu_main_sobre_text">Sobre</string>
+
     <!-- menu_materias.xml -->
-    <string name="menu_materias_materia_salvar_text">Salvar</string>
-    <string name="menu_materias_materia_excluir_text">Excluir</string>
+    <string name="menu_materias_salvar_text">Salvar</string>
+    <string name="menu_materias_excluir_text">Excluir</string>
+
+    <!-- menu_avaliacoes.xml -->
+    <string name="menu_avaliacoes_salvar_text">Salvar</string>
+    <string name="menu_avaliacoes_excluir_text">Excluir</string>
+
+    <!-- fragment_avaliacoes.xmll -->
+    <string name="fragment_avaliacoes_descricao_text">Descrição</string>
+    <string name="fragment_avaliacoes_data_text">Data</string>
+    <string name="fragment_avaliacoes_peso_text">Peso</string>
+    <string name="fragment_avaliacoes_nota_text">Nota</string>
+    <string-array name="fragment_avaliacoes_tipos">
+        <item>Prova</item>
+        <item>Trabalho</item>
+    </string-array>
+
+    <!-- activity_avaliacoes.xmll -->
+    <string name="activity_avaliacoes_descricao_text">Descrição</string>
+    <string name="activity_avaliacoes_data_text">Data</string>
+    <string name="activity_avaliacoes_peso_text">Peso</string>
+    <string name="activity_avaliacoes_nota_text">Nota</string>
+    <string-array name="activity_avaliacoes_tipos">
+        <item>Prova</item>
+        <item>Trabalho</item>
+    </string-array>
 </resources>
