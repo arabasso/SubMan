@@ -1,5 +1,6 @@
 package br.edu.fumep.eep.cc.subman;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private MateriasFragment materiasFragment;
     private DatasFragment datasFragment;
     private MenuItem adicionarMateriaMenuItem;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +40,37 @@ public class MainActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.main_view_pager_container);
         viewPager.setAdapter(sectionsPagerAdapter);
 
+        context = this;
 
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch(position){
+                    case 0:
+                        materiasFragment.listar();
+                        break;
+
+                    case 1:
+                        datasFragment.listar();
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.main_tabs);
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_subject_white_24dp);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_date_range_white_24dp);
 
         materiasFragment = MateriasFragment.newInstance();
         datasFragment = DatasFragment.newInstance();
@@ -72,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         materiasFragment.listar();
+        datasFragment.listar();
     }
 
     @Override
@@ -104,15 +134,31 @@ public class MainActivity extends AppCompatActivity {
             return 2;
         }
 
+        private int[] imageResId = {
+                R.drawable.ic_subject_white_24dp,
+                R.drawable.ic_date_range_white_24dp,
+        };
+
+        private int[] textResId = {
+                R.string.activity_main_materias_text,
+                R.string.activity_main_datas_text,
+        };
+
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "Matérias";
-                case 1:
-                    return "Datas";
-            }
-            return null;
+            return context.getResources().getString(textResId[position]);
+//            Drawable image = context.getResources().getDrawable(imageResId[position]);
+//
+//            image.setBounds(0, 0, image.getIntrinsicWidth(), image.getIntrinsicHeight());
+//
+//            SpannableString sb = new SpannableString(context.getResources().getString(textResId[position]));
+//
+//            ImageSpan imageSpan = new ImageSpan(image, ImageSpan.ALIGN_BOTTOM);
+//
+//            sb.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//            sb.setSpan(new Rela);
+//
+//            return sb;
         }
     }
 }

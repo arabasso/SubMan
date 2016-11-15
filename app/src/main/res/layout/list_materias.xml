@@ -47,7 +47,6 @@
                     android:text="Professor" />
 
                 <TextView
-                    android:text="0, 0, 0"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/list_materias_notas_text_view" />

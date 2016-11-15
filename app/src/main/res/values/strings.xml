@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">SubMan</string>
 
+    <!-- activity_main.xml -->
+    <string name="activity_main_materias_text">Matérias</string>
+    <string name="activity_main_datas_text">Datas</string>
+
     <!-- menu_main.xml -->
     <string name="menu_main_sobre">Sobre</string>
 
@@ -9,6 +13,7 @@
     <string name="activity_materias_materia_hint">Nome</string>
     <string name="activity_materias_professor_text">Professor</string>
     <string name="activity_materias_professor_hint">Nome</string>
+    <string name="activity_materias_professor_error">Campo nome deve ser preenchido!</string>
 
     <!-- menu_main.xml -->
     <string name="menu_main_sobre_text">Sobre</string>
@@ -21,7 +26,7 @@
     <string name="menu_avaliacoes_salvar_text">Salvar</string>
     <string name="menu_avaliacoes_excluir_text">Excluir</string>
 
-    <!-- fragment_avaliacoes.xmll -->
+    <!-- fragment_avaliacoes.xml -->
     <string name="fragment_avaliacoes_descricao_text">Descrição</string>
     <string name="fragment_avaliacoes_data_text">Data</string>
     <string name="fragment_avaliacoes_peso_text">Peso</string>
@@ -31,7 +36,7 @@
         <item>Trabalho</item>
     </string-array>
 
-    <!-- activity_avaliacoes.xmll -->
+    <!-- activity_avaliacoes.xml -->
     <string name="activity_avaliacoes_descricao_text">Descrição</string>
     <string name="activity_avaliacoes_data_text">Data</string>
     <string name="activity_avaliacoes_concluido_text">Concluído</string>
@@ -41,4 +46,8 @@
         <item>Prova</item>
         <item>Trabalho</item>
     </string-array>
+
+    <!-- Dialogo -->
+    <string name="dialog_janela_exclusao_titulo_text">Exclusão</string>
+    <string name="dialog_janela_exclusao_mensagem_text">Tem certeza que deseja excluir?</string>
 </resources>

@@ -1,5 +1,6 @@
 package br.edu.fumep.eep.cc.subman;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
@@ -18,6 +19,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.joda.time.LocalDate;
 
@@ -169,9 +171,17 @@ public class MateriasActivity extends AppCompatActivity {
                 break;
 
             case R.id.menu_materias_salvar: {
+                String nome = materiaText.getText().toString();
+
+                if (nome == null || nome.trim().equals("")){
+                    Toast.makeText(this, R.string.activity_materias_professor_error, Toast.LENGTH_SHORT).show();
+
+                    return false;
+                }
+
                 Repositorio<Materia> materiaRepositorio = new SqliteMateriaRepositorio(this);
 
-                materia.setNome(materiaText.getText().toString());
+                materia.setNome(nome);
                 materia.setProfessor(professorText.getText().toString());
 
                 materiaRepositorio.salvar(materia);
@@ -182,12 +192,17 @@ public class MateriasActivity extends AppCompatActivity {
             }
 
             case R.id.menu_materias_excluir: {
-                Repositorio<Materia> materiaRepositorio = new SqliteMateriaRepositorio(this);
+                Dialogo.mostrar(this, R.string.dialog_janela_exclusao_titulo_text, R.string.dialog_janela_exclusao_mensagem_text, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Repositorio<Materia> materiaRepositorio = new SqliteMateriaRepositorio(MateriasActivity.this);
 
-                materiaRepositorio.excluir(materia);
+                        materiaRepositorio.excluir(materia);
 
-                setResult(2);
-                finish();
+                        setResult(2);
+                        finish();
+                    }
+                });
                 break;
             }
         }
