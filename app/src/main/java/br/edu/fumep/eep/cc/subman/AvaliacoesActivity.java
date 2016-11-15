@@ -146,6 +146,7 @@ public class AvaliacoesActivity extends AppCompatActivity {
                     avaliacao.setConcluido(concluidoCheckBox.isChecked());
                     avaliacao.setPesoFormatado(pesoEditText.getText().toString());
                     avaliacao.setNotaFormatada(notaEditText.getText().toString());
+                    avaliacao.setConcluido(concluidoCheckBox.isChecked());
 
                     avaliacaoRepositorio.salvar(avaliacao);
                 } else {

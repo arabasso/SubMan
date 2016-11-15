@@ -54,12 +54,12 @@
 
         <TextView
             android:text="Matéria"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/list_datas_materia_text_view"
             android:textAppearance="@android:style/TextAppearance.Small"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1" />
+            android:layout_gravity="center_vertical" />
+
     </LinearLayout>
 
 </LinearLayout>

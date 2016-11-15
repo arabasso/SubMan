@@ -139,9 +139,24 @@ public class AvaliacaoTest {
     }
 
     @Test
+    public void definirConclusaoComNotaPreenchidaNaoTemEfeito(){
+        avaliacao.setNota(10.0f);
+        avaliacao.setConcluido(false);
+
+        assertThat(avaliacao.foiConcluido(), is(true));
+    }
+
+    @Test
     public void anularNotaDeixaAvaliacaoPendente(){
         avaliacao.setNota(null);
 
         assertThat(avaliacao.foiConcluido(), is(false));
+    }
+
+    @Test
+    public void temNota(){
+        avaliacao.setNota(null);
+
+        assertThat(avaliacao.temNota(), is(false));
     }
 }

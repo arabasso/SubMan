@@ -139,14 +139,14 @@ public class MateriasFragment extends Fragment {
             TextView notasTextView = (TextView) convertView.findViewById(R.id.list_materias_notas_text_view);
             TextView mediaTextView = (TextView) convertView.findViewById(R.id.list_materias_media_text_view);
 
-            Materia m = (Materia)getItem(position);
+            Materia materia = (Materia)getItem(position);
 
-            letraTextView.setBackground(getShapeDrawable(m));
-            letraTextView.setText(m.getSigla());
-            nomeTextView.setText(m.getNome());
-            professorTextView.setText(m.getProfessor());
-            notasTextView.setText("0, 0");
-            mediaTextView.setText(NumberFormat.getInstance().format(m.calcularMedia()));
+            letraTextView.setBackground(getShapeDrawable(materia));
+            letraTextView.setText(materia.getSigla());
+            nomeTextView.setText(materia.getNome());
+            professorTextView.setText(materia.getProfessor());
+            notasTextView.setText(materia.getNotas(" / "));
+            mediaTextView.setText(NumberFormat.getInstance().format(materia.calcularMedia()));
 
             return convertView;
         }
@@ -159,6 +159,7 @@ public class MateriasFragment extends Fragment {
             background.setShape(new OvalShape());
 
             background.getPaint().setColor(ContextCompat.getColor(getActivity(), R.color.circulo_0 + indice));
+
             return background;
         }
     }

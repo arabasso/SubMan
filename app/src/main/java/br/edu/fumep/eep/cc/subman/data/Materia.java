@@ -1,7 +1,10 @@
 package br.edu.fumep.eep.cc.subman.data;
 
+import android.text.TextUtils;
+
 import org.joda.time.LocalDate;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -123,5 +126,19 @@ public class Materia implements Entidade {
         }
 
         return sb.toString();
+    }
+
+    public String getNotas(String separador) {
+        List<String> notas = new ArrayList<>();
+
+        for (Avaliacao a : getAvaliacoes()) {
+            if (!a.temNota()){
+                continue;
+            }
+
+            notas.add(NumberFormat.getInstance().format(a.calcularNota()));
+        }
+
+        return TextUtils.join(separador, notas);
     }
 }

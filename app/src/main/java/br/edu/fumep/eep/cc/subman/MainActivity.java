@@ -1,6 +1,5 @@
 package br.edu.fumep.eep.cc.subman;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -25,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
     private MateriasFragment materiasFragment;
     private DatasFragment datasFragment;
     private MenuItem adicionarMateriaMenuItem;
-    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,32 +38,40 @@ public class MainActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.main_view_pager_container);
         viewPager.setAdapter(sectionsPagerAdapter);
 
-        context = this;
-
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                switch(position){
-                    case 0:
-                        materiasFragment.listar();
-                        break;
-
-                    case 1:
-                        datasFragment.listar();
-                        break;
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+//        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                switch(position){
+//                    case 0:
+//                        new Thread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                materiasFragment.listar();
+//                            }
+//                        }).start();
+//                        break;
+//
+//                    case 1:
+//                        new Thread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                datasFragment.listar();
+//                            }
+//                        }).start();
+//                        break;
+//                }
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//
+//            }
+//        });
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.main_tabs);
         tabLayout.setupWithViewPager(viewPager);
@@ -106,8 +112,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -134,11 +138,6 @@ public class MainActivity extends AppCompatActivity {
             return 2;
         }
 
-        private int[] imageResId = {
-                R.drawable.ic_subject_white_24dp,
-                R.drawable.ic_date_range_white_24dp,
-        };
-
         private int[] textResId = {
                 R.string.activity_main_materias_text,
                 R.string.activity_main_datas_text,
@@ -146,19 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return context.getResources().getString(textResId[position]);
-//            Drawable image = context.getResources().getDrawable(imageResId[position]);
-//
-//            image.setBounds(0, 0, image.getIntrinsicWidth(), image.getIntrinsicHeight());
-//
-//            SpannableString sb = new SpannableString(context.getResources().getString(textResId[position]));
-//
-//            ImageSpan imageSpan = new ImageSpan(image, ImageSpan.ALIGN_BOTTOM);
-//
-//            sb.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//            sb.setSpan(new Rela);
-//
-//            return sb;
+            return getResources().getString(textResId[position]);
         }
     }
 }

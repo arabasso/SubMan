@@ -135,6 +135,8 @@ public class DatasFragment extends Fragment {
             tipoTextView.setText(tipos[avaliacao.getTipo()]);
 
             materiaTextView.setText(avaliacao.getMateria().getNome());
+            materiaTextView.append(" - ");
+            materiaTextView.append(avaliacao.getMateria().getProfessor());
             descricaoTextView.setText(avaliacao.getDescricao());
             dataTextView.setText(avaliacao.getData(DateTimeFormat.forPattern("dd/MM")));
 

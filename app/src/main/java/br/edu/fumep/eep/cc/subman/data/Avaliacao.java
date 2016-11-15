@@ -169,7 +169,9 @@ public class Avaliacao implements Entidade {
     }
 
     public void setConcluido(boolean concluido) {
-        this.concluido = concluido;
+        if (!temNota()){
+            this.concluido = concluido;
+        }
     }
 
     public String getDataFormatada() {
@@ -205,5 +207,9 @@ public class Avaliacao implements Entidade {
         }
 
         return peso * nota;
+    }
+
+    public boolean temNota() {
+        return getNota() != null;
     }
 }
