@@ -147,7 +147,7 @@ public class AvaliacaoTest {
     }
 
     @Test
-    public void anularNotaDeixaAvaliacaoPendente(){
+    public void anularNotaDeixaProvaPendente(){
         avaliacao.setNota(null);
 
         assertThat(avaliacao.foiConcluido(), is(false));

@@ -106,7 +106,9 @@ public class Avaliacao implements Entidade {
     }
 
     public void setNota(Float nota) {
-        setConcluido(nota != null);
+        if (getTipo() == 0){
+            this.concluido = (nota != null);
+        }
 
         this.nota = nota;
     }
@@ -169,7 +171,7 @@ public class Avaliacao implements Entidade {
     }
 
     public void setConcluido(boolean concluido) {
-        if (!temNota()){
+        if (getTipo() != 0){
             this.concluido = concluido;
         }
     }
