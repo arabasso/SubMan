@@ -176,7 +176,7 @@ public class MateriasActivity extends AppCompatActivity {
 
                 materiaRepositorio.salvar(materia);
 
-                setResult(0);
+                setResult(1);
                 finish();
                 break;
             }
@@ -186,7 +186,7 @@ public class MateriasActivity extends AppCompatActivity {
 
                 materiaRepositorio.excluir(materia);
 
-                setResult(1);
+                setResult(2);
                 finish();
                 break;
             }

@@ -16,6 +16,10 @@ import android.widget.Spinner;
 
 import org.joda.time.LocalDate;
 
+import br.edu.fumep.eep.cc.subman.data.Avaliacao;
+import br.edu.fumep.eep.cc.subman.data.repository.Repositorio;
+import br.edu.fumep.eep.cc.subman.data.repository.SqliteAvaliacaoRepositorio;
+
 /**
  * Created by arabasso on 09/11/2016.
  *
@@ -31,6 +35,7 @@ public class AvaliacoesActivity extends AppCompatActivity {
     private EditText notaEditText;
     private Spinner tiposSpinner;
     private CheckBox concluidoCheckBox;
+    private Avaliacao avaliacao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,18 +80,35 @@ public class AvaliacoesActivity extends AppCompatActivity {
 
         if (bundle != null) {
             id = bundle.getInt("id");
-            position = bundle.getInt("position");
 
-            if (position >= 0){
-                tiposSpinner.setSelection(bundle.getInt("tipo"));
-                descricaoEditText.setText(bundle.getString("descricao"));
+            if (id > 0){
+                Repositorio<Avaliacao> avaliacaoRepositorio = new SqliteAvaliacaoRepositorio(this);
 
-                LocalDate data = (LocalDate)bundle.getSerializable("data");
+                avaliacao = avaliacaoRepositorio.carregar(id);
+
+                tiposSpinner.setSelection(avaliacao.getTipo());
+                descricaoEditText.setText(avaliacao.getDescricao());
+
+                LocalDate data = avaliacao.getData();
 
                 dataDatePicker.updateDate(data.getYear(), data.getMonthOfYear() - 1, data.getDayOfMonth());
-                pesoEditText.setText(bundle.getString("peso"));
-                notaEditText.setText(bundle.getString("nota"));
-                concluidoCheckBox.setChecked(bundle.getBoolean("concluido"));
+                pesoEditText.setText(avaliacao.getPesoFormatado());
+                notaEditText.setText(avaliacao.getNotaFormatada());
+                concluidoCheckBox.setChecked(avaliacao.foiConcluido());
+            } else{
+                position = bundle.getInt("position");
+
+                if (position >= 0){
+                    tiposSpinner.setSelection(bundle.getInt("tipo"));
+                    descricaoEditText.setText(bundle.getString("descricao"));
+
+                    LocalDate data = (LocalDate)bundle.getSerializable("data");
+
+                    dataDatePicker.updateDate(data.getYear(), data.getMonthOfYear() - 1, data.getDayOfMonth());
+                    pesoEditText.setText(bundle.getString("peso"));
+                    notaEditText.setText(bundle.getString("nota"));
+                    concluidoCheckBox.setChecked(bundle.getBoolean("concluido"));
+                }
             }
         }
     }
@@ -110,7 +132,25 @@ public class AvaliacoesActivity extends AppCompatActivity {
                 break;
 
             case R.id.menu_avaliacoes_salvar: {
-                Intent intent = getResultIntent();
+                Intent intent = null;
+
+                if (avaliacao != null){
+                    Repositorio<Avaliacao> avaliacaoRepositorio = new SqliteAvaliacaoRepositorio(this);
+
+                    avaliacao.setTipo(tiposSpinner.getSelectedItemPosition());
+                    avaliacao.setDescricao(descricaoEditText.getText().toString());
+
+                    LocalDate data = new LocalDate(dataDatePicker.getYear(), dataDatePicker.getMonth() + 1, dataDatePicker.getDayOfMonth());
+
+                    avaliacao.setData(data);
+                    avaliacao.setConcluido(concluidoCheckBox.isChecked());
+                    avaliacao.setPesoFormatado(pesoEditText.getText().toString());
+                    avaliacao.setNotaFormatada(notaEditText.getText().toString());
+
+                    avaliacaoRepositorio.salvar(avaliacao);
+                } else {
+                    intent = getResultIntent();
+                }
 
                 setResult(1, intent);
                 finish();
@@ -118,9 +158,18 @@ public class AvaliacoesActivity extends AppCompatActivity {
             }
 
             case R.id.menu_avaliacoes_excluir: {
-                Intent intent = getResultIntent();
+                Intent intent = null;
+
+                if (avaliacao != null) {
+                    Repositorio<Avaliacao> avaliacaoRepositorio = new SqliteAvaliacaoRepositorio(this);
+
+                    avaliacaoRepositorio.excluir(avaliacao);
+                } else {
+                    intent = getResultIntent();
+                }
 
                 setResult(2, intent);
+
                 finish();
                 break;
             }
@@ -142,8 +191,8 @@ public class AvaliacoesActivity extends AppCompatActivity {
 
         intent.putExtra("data", data);
         intent.putExtra("peso", pesoEditText.getText().toString());
-        intent.putExtra("concluido", concluidoCheckBox.isChecked());
         intent.putExtra("nota", notaEditText.getText().toString());
+        intent.putExtra("concluido", concluidoCheckBox.isChecked());
 
         return intent;
     }

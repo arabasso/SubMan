@@ -106,11 +106,17 @@ public class Avaliacao implements Entidade {
     }
 
     public void setNota(Float nota) {
+        setConcluido(nota != null);
+
         this.nota = nota;
     }
 
     public Materia getMateria() {
         return materia;
+    }
+
+    protected void setMateria(Materia materia){
+        this.materia = materia;
     }
 
     public String getPesoFormatado() {

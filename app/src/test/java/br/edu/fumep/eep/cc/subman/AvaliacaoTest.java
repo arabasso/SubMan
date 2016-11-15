@@ -126,10 +126,22 @@ public class AvaliacaoTest {
 
     @Test
     public void definirDataComoString14_11_2016(){
-        DateTimeFormatter dateTimeFormatter = DateTimeFormat.longDate();
-
         avaliacao.setData(new LocalDate(2016, 11, 14));
 
         assertThat(avaliacao.getDataFormatada(), equalTo("14 de Novembro de 2016"));
+    }
+
+    @Test
+    public void definirValorNotaConcluiAvaliacao(){
+        avaliacao.setNota(10.0f);
+
+        assertThat(avaliacao.foiConcluido(), is(true));
+    }
+
+    @Test
+    public void anularNotaDeixaAvaliacaoPendente(){
+        avaliacao.setNota(null);
+
+        assertThat(avaliacao.foiConcluido(), is(false));
     }
 }

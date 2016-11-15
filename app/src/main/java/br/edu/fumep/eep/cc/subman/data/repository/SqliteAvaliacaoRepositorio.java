@@ -19,6 +19,7 @@ import br.edu.fumep.eep.cc.subman.data.Materia;
 
 public class SqliteAvaliacaoRepositorio implements AvaliacaoRepositorio {
     private SqliteDbHelper dbHelper;
+    private Context context;
     private String[] campos = new String[]{
             "id",
             "descricao",
@@ -27,11 +28,12 @@ public class SqliteAvaliacaoRepositorio implements AvaliacaoRepositorio {
             "peso",
             "nota",
             "concluido",
-            "materia_id"
+            "materia_id",
     };
 
     public SqliteAvaliacaoRepositorio(Context context) {
         this.dbHelper = new SqliteDbHelper(context);
+        this.context = context;
     }
 
     @Override
@@ -105,14 +107,18 @@ public class SqliteAvaliacaoRepositorio implements AvaliacaoRepositorio {
 
     @Override
     public List<Avaliacao> listarPendentes() {
-        return null;
+        String [] p = new String[]{
+                Integer.toString(0)
+        };
+
+        return getAvaliacoes("concluido = ?", p);
     }
 
     @NonNull
     private List<Avaliacao> getAvaliacoes(String where, String [] p) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        Cursor cursor = db.query(SqliteDbHelper.TABELA_AVALIACAO, campos, where, p, null, null, "data ASC");
+        Cursor cursor = db.query(SqliteDbHelper.TABELA_AVALIACAO, campos, where, p, null, null, "data ASC, descricao ASC");
 
         List<Avaliacao> av = new ArrayList<>();
 
@@ -129,10 +135,31 @@ public class SqliteAvaliacaoRepositorio implements AvaliacaoRepositorio {
         return av;
     }
 
+    private class AvaliacaoProxy extends Avaliacao{
+        private final Repositorio<Materia> materiaRepositorio;
+        private int materiaId;
+
+        public AvaliacaoProxy(int materiaId, Context context) {
+            super(null);
+
+            this.materiaId = materiaId;
+            materiaRepositorio = new SqliteMateriaRepositorio(context);
+        }
+
+        @Override
+        public Materia getMateria() {
+            if (super.getMateria() == null){
+                super.setMateria(materiaRepositorio.carregar(materiaId));
+            }
+
+            return super.getMateria();
+        }
+    }
+
     @NonNull
     private Avaliacao getAvaliacao(Cursor cursor) {
 
-        Avaliacao avaliacao = new Avaliacao(new Materia(cursor.getInt(7)));
+        Avaliacao avaliacao = new AvaliacaoProxy(cursor.getInt(7), context);
 
         avaliacao.setId(cursor.getInt(0));
         avaliacao.setDescricao(cursor.getString(1));
