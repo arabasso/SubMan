@@ -37,7 +37,6 @@
                 android:text="@string/activity_avaliacoes_descricao_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView3"
                 android:textAppearance="@android:style/TextAppearance.Medium" />
 
             <EditText
@@ -60,7 +59,6 @@
                 android:text="@string/activity_avaliacoes_peso_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView4"
                 android:textAppearance="@android:style/TextAppearance.Medium" />
 
             <EditText
@@ -74,7 +72,6 @@
                 android:text="@string/activity_avaliacoes_nota_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView5"
                 android:textAppearance="@android:style/TextAppearance.Medium" />
 
             <EditText
@@ -83,6 +80,13 @@
                 android:inputType="numberDecimal"
                 android:ems="10"
                 android:id="@+id/activity_avaliacoes_nota_edit_text"
+                android:textAppearance="@android:style/TextAppearance.Medium" />
+
+            <CheckBox
+                android:text="@string/activity_avaliacoes_concluido_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/activity_avaliacoes_concluido_check_box"
                 android:textAppearance="@android:style/TextAppearance.Medium" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

@@ -34,6 +34,7 @@
     <!-- activity_avaliacoes.xmll -->
     <string name="activity_avaliacoes_descricao_text">Descrição</string>
     <string name="activity_avaliacoes_data_text">Data</string>
+    <string name="activity_avaliacoes_concluido_text">Concluído</string>
     <string name="activity_avaliacoes_peso_text">Peso</string>
     <string name="activity_avaliacoes_nota_text">Nota</string>
     <string-array name="activity_avaliacoes_tipos">

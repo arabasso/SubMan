@@ -23,14 +23,6 @@ public class MainActivity extends AppCompatActivity {
     private MateriasFragment materiasFragment;
     private DatasFragment datasFragment;
 
-    public MateriasFragment getMateriasFragment() {
-        return materiasFragment;
-    }
-
-    public DatasFragment getDatasFragment() {
-        return datasFragment;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
         materiasFragment = MateriasFragment.newInstance();
         datasFragment = DatasFragment.newInstance();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

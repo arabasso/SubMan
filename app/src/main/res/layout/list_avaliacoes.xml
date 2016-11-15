@@ -7,20 +7,24 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/list_avaliacoes_tipo_text_view"
-            android:text="0" />
+            android:textAppearance="@android:style/TextAppearance.Inverse"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginRight="@dimen/list_view_item_padding"
+            android:gravity="center"
+            android:layout_gravity="center_vertical" />
 
         <TextView
             android:text="P1"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/list_avaliacoes_descricao_text_view"
-            android:textAppearance="@android:style/TextAppearance.Large" />
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:layout_gravity="center" />
     </LinearLayout>
 
     <LinearLayout
@@ -32,7 +36,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5">
+            android:layout_weight="0.25">
 
             <TextView
                 android:layout_width="match_parent"
@@ -41,20 +45,38 @@
                 android:text="dd/MM/yyyy"
                 android:textAppearance="@android:style/TextAppearance.Medium" />
 
-            <TextView
-                android:text="0.5"
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/list_avaliacoes_peso_text_view" />
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:text="0.5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/list_avaliacoes_peso_text_view"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:text="8.5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/list_avaliacoes_nota_text_view"
+                    android:layout_weight="1"
+                    android:textAppearance="@android:style/TextAppearance.Small" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <TextView
             android:text="8.5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/list_avaliacoes_nota_text_view"
-            android:layout_weight="0.5"
-            android:textAppearance="@android:style/TextAppearance.Large" />
+            android:id="@+id/list_avaliacoes_media_text_view"
+            android:layout_weight="0.75"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:gravity="right" />
 
     </LinearLayout>
 

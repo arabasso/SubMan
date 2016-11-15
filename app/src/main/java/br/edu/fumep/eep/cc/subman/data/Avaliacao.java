@@ -2,11 +2,13 @@ package br.edu.fumep.eep.cc.subman.data;
 
 import android.support.annotation.Nullable;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Locale;
 
 /**
  * Created by arabasso on 10/11/2016.
@@ -17,24 +19,13 @@ public class Avaliacao implements Entidade {
     private int id;
     private String descricao;
     private int tipo;
-    private DateTime data;
+    private LocalDate data;
     private Float peso;
     private Float nota;
+    private boolean concluido;
     private Materia materia;
-    private String notaFormatada;
-    private String notaFormatado;
 
     public Avaliacao(Materia materia) {
-        this.materia = materia;
-    }
-
-    public Avaliacao(int id, String descricao, int tipo, DateTime data, Float peso, Float nota, Materia materia) {
-        this.id = id;
-        this.descricao = descricao;
-        this.tipo = tipo;
-        this.data = data;
-        this.peso = peso;
-        this.nota = nota;
         this.materia = materia;
     }
 
@@ -62,29 +53,28 @@ public class Avaliacao implements Entidade {
         this.tipo = tipo;
     }
 
-    public DateTime getData() {
+    public LocalDate getData() {
         return data;
     }
 
-    public void setData(DateTime data) {
+    public void setData(LocalDate data) {
         this.data = data;
     }
 
-    public String getDataFormatada() {
-        return getDataFormatada("yyyy-MM-dd");
+    public String getDataSimplesmenteFormatada() {
+        return getDataSimplesmenteFormatada("yyyy-MM-dd");
     }
 
-
-    public String getDataFormatada(String formato) {
+    public String getDataSimplesmenteFormatada(String formato) {
         return this.data.toString(DateTimeFormat.forPattern(formato));
     }
 
-    public void setDataFormatada(String valor) {
-        setDataFormatada(valor, "yyyy-MM-dd");
+    public void setDataSimplesmenteFormatada(String valor) {
+        setDataSimplesmenteFormatada(valor, "yyyy-MM-dd");
     }
 
-    public void setDataFormatada(String valor, String formato) {
-        this.data = DateTimeFormat.forPattern(formato).parseDateTime(valor);
+    public void setDataSimplesmenteFormatada(String valor, String formato) {
+        this.data = DateTimeFormat.forPattern(formato).parseLocalDate(valor);
     }
 
     public Float getPeso() {
@@ -123,12 +113,8 @@ public class Avaliacao implements Entidade {
         return materia;
     }
 
-    public void setMateria(Materia materia) {
-        this.materia = materia;
-    }
-
     public String getPesoFormatado() {
-        return getPeso(NumberFormat.getNumberInstance());
+        return getPeso(NumberFormat.getNumberInstance(Locale.US));
     }
 
     public void setPeso(String valor, NumberFormat numberFormat) {
@@ -145,7 +131,7 @@ public class Avaliacao implements Entidade {
 
     @Nullable
     private Float getFloat(String valor, NumberFormat numberFormat) {
-        Float peso = null;
+        Float peso;
 
         if (valor == null || valor.equals("")){
             peso = null;
@@ -156,18 +142,62 @@ public class Avaliacao implements Entidade {
                 peso = null;
             }
         }
+
         return peso;
     }
 
     public void setPesoFormatado(String valor) {
-        setPeso(valor, NumberFormat.getNumberInstance());
+        setPeso(valor, NumberFormat.getNumberInstance(Locale.US));
     }
 
     public String getNotaFormatada() {
-        return getNota(NumberFormat.getNumberInstance());
+        return getNota(NumberFormat.getNumberInstance(Locale.US));
     }
 
     public void setNotaFormatada(String valor) {
-        setNota(valor, NumberFormat.getNumberInstance());
+        setNota(valor, NumberFormat.getNumberInstance(Locale.US));
+    }
+
+    public boolean foiConcluido() {
+        return concluido;
+    }
+
+    public void setConcluido(boolean concluido) {
+        this.concluido = concluido;
+    }
+
+    public String getDataFormatada() {
+        return getData(DateTimeFormat.longDate());
+    }
+
+    public String getData(DateTimeFormatter dateTimeFormatter) {
+        if (getData() == null){
+            return "";
+        }
+
+        return getData().toString(dateTimeFormatter);
+    }
+
+    public void setDataFormatada(String valor, DateTimeFormatter dateTimeFormatter) {
+        if (valor == null || valor.equals("")){
+            setData(null);
+        } else{
+            setData(dateTimeFormatter.parseLocalDate(valor));
+        }
+    }
+
+    public double calcularNota() {
+        Float peso = getPeso();
+        Float nota = getNota();
+
+        if (peso == null){
+            peso = 0.0f;
+        }
+
+        if (nota == null){
+            nota = 0.0f;
+        }
+
+        return peso * nota;
     }
 }

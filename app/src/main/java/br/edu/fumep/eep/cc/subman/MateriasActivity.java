@@ -1,8 +1,12 @@
 package br.edu.fumep.eep.cc.subman;
 
 import android.content.Intent;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,7 +19,9 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+
+import java.text.NumberFormat;
 
 import br.edu.fumep.eep.cc.subman.data.Avaliacao;
 import br.edu.fumep.eep.cc.subman.data.Materia;
@@ -80,12 +86,13 @@ public class MateriasActivity extends AppCompatActivity {
                 Intent intent = new Intent(view.getContext(), AvaliacoesActivity.class);
 
                 intent.putExtra("position", position);
-                intent.putExtra("id", avaliacao.getId());
+                intent.putExtra("id", 0);
                 intent.putExtra("tipo", avaliacao.getTipo());
                 intent.putExtra("descricao", avaliacao.getDescricao());
                 intent.putExtra("data", avaliacao.getData());
                 intent.putExtra("peso", avaliacao.getPesoFormatado());
                 intent.putExtra("nota", avaliacao.getNotaFormatada());
+                intent.putExtra("concluido", avaliacao.foiConcluido());
 
                 startActivityForResult(intent, 0);
             }
@@ -115,9 +122,12 @@ public class MateriasActivity extends AppCompatActivity {
 
                 avaliacao.setTipo(data.getIntExtra("tipo", 0));
                 avaliacao.setDescricao(data.getStringExtra("descricao"));
-                avaliacao.setData((DateTime) data.getSerializableExtra("data"));
+                avaliacao.setData((LocalDate) data.getSerializableExtra("data"));
                 avaliacao.setNotaFormatada(data.getStringExtra("nota"));
                 avaliacao.setPesoFormatado(data.getStringExtra("peso"));
+                avaliacao.setConcluido(data.getBooleanExtra("concluido", false));
+
+                materia.ordenarAvaliacoes();
 
                 adapter.notifyDataSetChanged();
 
@@ -129,6 +139,8 @@ public class MateriasActivity extends AppCompatActivity {
 
                 if (position >= 0){
                     materia.getAvaliacoes().remove(position);
+
+                    materia.ordenarAvaliacoes();
 
                     adapter.notifyDataSetChanged();
                 }
@@ -205,6 +217,11 @@ public class MateriasActivity extends AppCompatActivity {
             return materia.getAvaliacoes().get(position).getId();
         }
 
+        private String [] tipos = new String[]{
+                "P",
+                "T"
+        };
+
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = getLayoutInflater().inflate(R.layout.list_avaliacoes, parent, false);
@@ -214,26 +231,31 @@ public class MateriasActivity extends AppCompatActivity {
             TextView dataTextView = (TextView) convertView.findViewById(R.id.list_avaliacoes_data_text_view);
             TextView pesoTextView = (TextView) convertView.findViewById(R.id.list_avaliacoes_peso_text_view);
             TextView notaTextView = (TextView) convertView.findViewById(R.id.list_avaliacoes_nota_text_view);
+            TextView mediaTextView = (TextView) convertView.findViewById(R.id.list_avaliacoes_media_text_view);
 
             Avaliacao avaliacao = (Avaliacao) getItem(position);
 
-            tipoTextView.setText(Integer.toString(avaliacao.getTipo()));
+            tipoTextView.setBackground(getShapeDrawable(position, convertView));
+            tipoTextView.setText(tipos[avaliacao.getTipo()]);
+
             descricaoTextView.setText(avaliacao.getDescricao());
             dataTextView.setText(avaliacao.getDataFormatada());
-
-            if (avaliacao.getPeso() != null){
-                pesoTextView.setText(Float.toString(avaliacao.getPeso()));
-            } else {
-                pesoTextView.setVisibility(View.INVISIBLE);
-            }
-
-            if (avaliacao.getNota() != null){
-                notaTextView.setText(Float.toString(avaliacao.getNota()));
-            } else{
-                notaTextView.setVisibility(View.INVISIBLE);
-            }
+            pesoTextView.setText(avaliacao.getPesoFormatado());
+            notaTextView.setText(avaliacao.getNotaFormatada());
+            mediaTextView.setText(NumberFormat.getInstance().format(avaliacao.calcularNota()));
 
             return convertView;
+        }
+
+        @NonNull
+        private ShapeDrawable getShapeDrawable(int posicao, View view) {
+            int indice = posicao % 10;
+
+            ShapeDrawable background = new ShapeDrawable();
+            background.setShape(new OvalShape());
+
+            background.getPaint().setColor(ContextCompat.getColor(view.getContext(), R.color.circulo_0 + indice));
+            return background;
         }
     }
 }

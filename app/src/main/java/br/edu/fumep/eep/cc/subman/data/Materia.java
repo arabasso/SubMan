@@ -1,9 +1,14 @@
 package br.edu.fumep.eep.cc.subman.data;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+
+import br.edu.fumep.eep.cc.subman.data.media.CalculoMedia;
+import br.edu.fumep.eep.cc.subman.data.media.CalculoMediaPonderada;
 
 /**
  * Created by arabasso on 09/11/2016.
@@ -15,6 +20,7 @@ public class Materia implements Entidade {
     private String nome;
     private String professor;
     private List<Avaliacao> avaliacoes = new ArrayList<>();
+    private CalculoMedia calculoMedia = new CalculoMediaPonderada();
 
     public Materia(){
     }
@@ -65,6 +71,14 @@ public class Materia implements Entidade {
         this.avaliacoes = avaliacoes;
     }
 
+    public void ordenarAvaliacoes(){
+        Collections.sort(this.avaliacoes, new Comparator<Avaliacao>() {
+            public int compare(Avaliacao o1, Avaliacao o2) {
+                return o1.getData().compareTo(o2.getData());
+            }
+        });
+    }
+
     public Avaliacao addAvaliacao(){
         Avaliacao avaliacao = new Avaliacao(this);
 
@@ -73,7 +87,7 @@ public class Materia implements Entidade {
         return avaliacao;
     }
 
-    public Avaliacao addAvaliacao(int tipo, String descricao, DateTime data, Float peso, Float nota){
+    public Avaliacao addAvaliacao(int tipo, String descricao, LocalDate data, Float peso, Float nota){
         Avaliacao avaliacao = new Avaliacao(this);
 
         avaliacao.setDescricao(descricao);
@@ -93,5 +107,21 @@ public class Materia implements Entidade {
         }
 
         return addAvaliacao();
+    }
+
+    public double calcularMedia() {
+        return calculoMedia.calcular(getAvaliacoes());
+    }
+
+    public String getSigla() {
+        StringBuffer sb = new StringBuffer();
+
+        for (String s : nome.split(" ")) {
+            if (s.length() > 3){
+                sb.append(Character.toUpperCase(s.charAt(0)));
+            }
+        }
+
+        return sb.toString();
     }
 }

@@ -6,12 +6,15 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 /**
  * Created by arabasso on 09/11/2016.
@@ -27,6 +30,7 @@ public class AvaliacoesActivity extends AppCompatActivity {
     private EditText pesoEditText;
     private EditText notaEditText;
     private Spinner tiposSpinner;
+    private CheckBox concluidoCheckBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +42,24 @@ public class AvaliacoesActivity extends AppCompatActivity {
 
         tiposSpinner = (Spinner) findViewById(R.id.activity_avaliacoes_tipos_spinner);
 
+        tiposSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                boolean ehTrabalho = position == 1;
+
+                concluidoCheckBox.setVisibility(ehTrabalho ? View.VISIBLE : View.GONE);
+
+                if (!ehTrabalho){
+                    concluidoCheckBox.setChecked(false);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.fragment_avaliacoes_tipos, android.R.layout.simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -47,6 +69,7 @@ public class AvaliacoesActivity extends AppCompatActivity {
         dataDatePicker = (DatePicker)findViewById(R.id.activity_avaliacoes_data_date_picker);
         pesoEditText = (EditText)findViewById(R.id.activity_avaliacoes_peso_edit_text);
         notaEditText = (EditText)findViewById(R.id.activity_avaliacoes_nota_edit_text);
+        concluidoCheckBox = (CheckBox)findViewById(R.id.activity_avaliacoes_concluido_check_box);
 
         Bundle bundle = getIntent().getExtras();
 
@@ -58,11 +81,12 @@ public class AvaliacoesActivity extends AppCompatActivity {
                 tiposSpinner.setSelection(bundle.getInt("tipo"));
                 descricaoEditText.setText(bundle.getString("descricao"));
 
-                DateTime data = (DateTime)bundle.getSerializable("data");
+                LocalDate data = (LocalDate)bundle.getSerializable("data");
 
-                dataDatePicker.updateDate(data.getYear(), data.getMonthOfYear(), data.getDayOfMonth());
+                dataDatePicker.updateDate(data.getYear(), data.getMonthOfYear() - 1, data.getDayOfMonth());
                 pesoEditText.setText(bundle.getString("peso"));
                 notaEditText.setText(bundle.getString("nota"));
+                concluidoCheckBox.setChecked(bundle.getBoolean("concluido"));
             }
         }
     }
@@ -114,10 +138,11 @@ public class AvaliacoesActivity extends AppCompatActivity {
         intent.putExtra("position", position);
         intent.putExtra("descricao", descricaoEditText.getText().toString());
 
-        DateTime data = new DateTime(dataDatePicker.getYear(), dataDatePicker.getMonth(), dataDatePicker.getDayOfMonth(), 0, 0);
+        LocalDate data = new LocalDate(dataDatePicker.getYear(), dataDatePicker.getMonth() + 1, dataDatePicker.getDayOfMonth());
 
         intent.putExtra("data", data);
         intent.putExtra("peso", pesoEditText.getText().toString());
+        intent.putExtra("concluido", concluidoCheckBox.isChecked());
         intent.putExtra("nota", notaEditText.getText().toString());
 
         return intent;

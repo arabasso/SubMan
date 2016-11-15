@@ -38,7 +38,7 @@ public class SqliteMateriaRepositorio implements Repositorio<Materia> {
         }
 
         @Override
-        public List<Avaliacao> getAvaliacoes() {
+        public synchronized List<Avaliacao> getAvaliacoes() {
             if (!carregado){
                 setAvaliacoes(avaliacaoRepositorio.listarPelaMateria(this));
 
@@ -159,7 +159,11 @@ public class SqliteMateriaRepositorio implements Repositorio<Materia> {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        db.delete(SqliteDbHelper.TABELA_AVALIACAO, "NOT id IN (" + TextUtils.join(",", ids) + ")", null);
+        String [] p = new String[]{
+                Integer.toString(materia.getId())
+        };
+
+        db.delete(SqliteDbHelper.TABELA_AVALIACAO, "NOT id IN (" + TextUtils.join(",", ids) + ") AND materia_id = ?", null);
 
         db.close();
     }

@@ -17,6 +17,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,7 +130,7 @@ public class MateriasFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            convertView = getActivity().getLayoutInflater().inflate(R.layout.list_materias, parent,false);
+            convertView = getActivity().getLayoutInflater().inflate(R.layout.list_materias, parent, false);
 
             TextView nomeTextView = (TextView)convertView.findViewById(R.id.list_materias_nome_text_view);
             TextView professorTextView = (TextView)convertView.findViewById(R.id.list_materias_professor_text_view);
@@ -140,11 +141,11 @@ public class MateriasFragment extends Fragment {
             Materia m = (Materia)getItem(position);
 
             letraTextView.setBackground(getShapeDrawable(m));
-            letraTextView.setText(Character.toString(m.getNome().charAt(0)));
+            letraTextView.setText(m.getSigla());
             nomeTextView.setText(m.getNome());
             professorTextView.setText(m.getProfessor());
             notasTextView.setText("0, 0");
-            mediaTextView.setText("0");
+            mediaTextView.setText(NumberFormat.getInstance().format(m.calcularMedia()));
 
             return convertView;
         }

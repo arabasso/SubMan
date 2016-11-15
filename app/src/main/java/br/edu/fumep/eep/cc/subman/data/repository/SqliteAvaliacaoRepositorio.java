@@ -20,7 +20,14 @@ import br.edu.fumep.eep.cc.subman.data.Materia;
 public class SqliteAvaliacaoRepositorio implements AvaliacaoRepositorio {
     private SqliteDbHelper dbHelper;
     private String[] campos = new String[]{
-            "id", "descricao", "tipo", "data", "peso", "nota", "materia_id"
+            "id",
+            "descricao",
+            "tipo",
+            "data",
+            "peso",
+            "nota",
+            "concluido",
+            "materia_id"
     };
 
     public SqliteAvaliacaoRepositorio(Context context) {
@@ -35,7 +42,7 @@ public class SqliteAvaliacaoRepositorio implements AvaliacaoRepositorio {
                 Integer.toString(id)
         };
 
-        Cursor cursor = db.query(SqliteDbHelper.TABELA_AVALIACAO, campos,"id=?",p,null,null,null);
+        Cursor cursor = db.query(SqliteDbHelper.TABELA_AVALIACAO, campos, "id = ?", p, null, null, null);
 
         Avaliacao avaliacao = null;
 
@@ -51,14 +58,7 @@ public class SqliteAvaliacaoRepositorio implements AvaliacaoRepositorio {
     public void salvar(Avaliacao avaliacao){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        ContentValues valores = new ContentValues();
-
-        valores.put("descricao", avaliacao.getDescricao());
-        valores.put("tipo", avaliacao.getTipo());
-        valores.put("data", avaliacao.getDataFormatada());
-        valores.put("peso", avaliacao.getPeso());
-        valores.put("nota", avaliacao.getNota());
-        valores.put("materia_id", avaliacao.getMateria().getId());
+        ContentValues valores = getValues(avaliacao);
 
         if (avaliacao.getId() <= 0){
             int id = (int)db.insert(SqliteDbHelper.TABELA_AVALIACAO, null, valores);
@@ -75,6 +75,21 @@ public class SqliteAvaliacaoRepositorio implements AvaliacaoRepositorio {
         db.close();
     }
 
+    @NonNull
+    private ContentValues getValues(Avaliacao avaliacao) {
+        ContentValues valores = new ContentValues();
+
+        valores.put("descricao", avaliacao.getDescricao());
+        valores.put("tipo", avaliacao.getTipo());
+        valores.put("data", avaliacao.getDataSimplesmenteFormatada());
+        valores.put("peso", avaliacao.getPeso());
+        valores.put("nota", avaliacao.getNota());
+        valores.put("concluido", avaliacao.foiConcluido());
+        valores.put("materia_id", avaliacao.getMateria().getId());
+
+        return valores;
+    }
+
     public List<Avaliacao> listar() {
         return getAvaliacoes(null, null);
     }
@@ -86,6 +101,11 @@ public class SqliteAvaliacaoRepositorio implements AvaliacaoRepositorio {
         };
 
         return getAvaliacoes("materia_id = ?", p);
+    }
+
+    @Override
+    public List<Avaliacao> listarPendentes() {
+        return null;
     }
 
     @NonNull
@@ -112,16 +132,17 @@ public class SqliteAvaliacaoRepositorio implements AvaliacaoRepositorio {
     @NonNull
     private Avaliacao getAvaliacao(Cursor cursor) {
 
-        Avaliacao a = new Avaliacao(new Materia(cursor.getInt(6)));
+        Avaliacao avaliacao = new Avaliacao(new Materia(cursor.getInt(7)));
 
-        a.setId(cursor.getInt(0));
-        a.setDescricao(cursor.getString(1));
-        a.setTipo(cursor.getInt(2));
-        a.setDataFormatada(cursor.getString(3));
-        a.setPesoFormatado(cursor.getString(4));
-        a.setNotaFormatada(cursor.getString(5));
+        avaliacao.setId(cursor.getInt(0));
+        avaliacao.setDescricao(cursor.getString(1));
+        avaliacao.setTipo(cursor.getInt(2));
+        avaliacao.setDataSimplesmenteFormatada(cursor.getString(3));
+        avaliacao.setPesoFormatado(cursor.getString(4));
+        avaliacao.setNotaFormatada(cursor.getString(5));
+        avaliacao.setConcluido(cursor.getInt(6) == 1);
 
-        return a;
+        return avaliacao;
     }
 
     public void excluir(Avaliacao avaliacao){

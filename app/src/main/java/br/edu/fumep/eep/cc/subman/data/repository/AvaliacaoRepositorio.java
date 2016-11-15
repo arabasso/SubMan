@@ -12,4 +12,5 @@ import br.edu.fumep.eep.cc.subman.data.Materia;
 
 public interface AvaliacaoRepositorio extends Repositorio<Avaliacao> {
     public List<Avaliacao> listarPelaMateria(Materia materia);
+    public List<Avaliacao> listarPendentes();
 }
