@@ -2,6 +2,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="br.edu.fumep.eep.cc.subman.MainActivity">
+    <item android:title="Item"
+        android:icon="@drawable/ic_add_white_24dp"
+        android:id="@+id/menu_main_adicionar_materia"
+        android:visible="true"
+        app:showAsAction="always" />
     <item
         android:id="@+id/menu_main_sobre"
         android:orderInCategory="100"

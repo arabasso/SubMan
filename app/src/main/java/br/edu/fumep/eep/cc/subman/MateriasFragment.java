@@ -6,7 +6,6 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -56,6 +55,10 @@ public class MateriasFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        listar();
+    }
+
+    public void listar() {
         Repositorio<Materia> materiaRepositorio = new SqliteMateriaRepositorio(getActivity());
 
         adapter.setList(materiaRepositorio.listar());
@@ -67,17 +70,17 @@ public class MateriasFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_materias, container, false);
 
 
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), MateriasActivity.class);
-
-                intent.putExtra("id", 0);
-
-                startActivityForResult(intent, 0);
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(getActivity(), MateriasActivity.class);
+//
+//                intent.putExtra("id", 0);
+//
+//                startActivityForResult(intent, 0);
+//            }
+//        });
 
         listView = (ListView) view.findViewById(R.id.fragment_materias_list_view);
 
@@ -96,9 +99,7 @@ public class MateriasFragment extends Fragment {
             }
         });
 
-        Repositorio<Materia> materiaRepositorio = new SqliteMateriaRepositorio(getActivity());
-
-        adapter.setList(materiaRepositorio.listar());
+        listar();
 
         return view;
     }

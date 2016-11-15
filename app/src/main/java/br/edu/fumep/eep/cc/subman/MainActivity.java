@@ -1,5 +1,6 @@
 package br.edu.fumep.eep.cc.subman;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private MateriasFragment materiasFragment;
     private DatasFragment datasFragment;
+    private MenuItem adicionarMateriaMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.main_view_pager_container);
         viewPager.setAdapter(sectionsPagerAdapter);
 
+
+
         TabLayout tabLayout = (TabLayout) findViewById(R.id.main_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -47,7 +51,27 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
+        adicionarMateriaMenuItem = menu.findItem(R.id.menu_main_adicionar_materia);
+
+        adicionarMateriaMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent(materiasFragment.getContext(), MateriasActivity.class);
+
+                intent.putExtra("id", 0);
+
+                startActivityForResult(intent, 0);
+
+                return true;
+            }
+        });
+
         return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        materiasFragment.listar();
     }
 
     @Override
